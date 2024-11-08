@@ -9,6 +9,17 @@ class Guest extends Model
 {
     use HasFactory;
 
-    //
+    protected $connection = 'pgsql';
+
+    protected $table = 'guests';
+
+    protected $fillable = [
+        'id',
+        'first_name',
+        'last_name',
+        'phone_number',
+        'email',
+        'country'
+    ];
 
 }
