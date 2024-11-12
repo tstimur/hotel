@@ -10,5 +10,12 @@ class GuestTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function testGuestsIndex(): void
+    {
+        $response = $this->get('/api/v1/guests');
+
+        $response->assertStatus(200);
+    }
+
 
 }
