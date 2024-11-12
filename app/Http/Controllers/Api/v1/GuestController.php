@@ -23,8 +23,8 @@ class GuestController extends Controller
             'status' => 'success',
             'data' => GuestResource::collection($guests),
             'links' => [
-                'previous page' => $guests->previousPageUrl(),
-                'next page' => $guests->nextPageUrl()
+                'previous_page' => $guests->previousPageUrl(),
+                'next_page' => $guests->nextPageUrl()
             ],
             'meta' => [
                 'current_page' => $guests->currentPage(),
@@ -55,7 +55,7 @@ class GuestController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'created guest' => new GuestResource($guest)
+            'created_guest' => new GuestResource($guest)
         ]);
     }
 
@@ -66,7 +66,7 @@ class GuestController extends Controller
     {
         return response()->json([
             'status' => 'success',
-            'selected data' => new GuestResource($guest),
+            'selected_guest' => new GuestResource($guest),
         ]);
     }
 
@@ -78,7 +78,7 @@ class GuestController extends Controller
         $guest->update($request->all());
         return response()->json([
             'status' => 'success',
-            'updated data' => new GuestResource($guest),
+            'updated_guest' => new GuestResource($guest),
         ]);
     }
 
