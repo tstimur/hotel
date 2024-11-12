@@ -52,5 +52,23 @@ class GuestTest extends TestCase
         ]);
     }
 
+    public function testGuestsUpdate()
+    {
+        $response = $this->put('/api/v1/guests/10', [
+            'first_name' => "Boris",
+            'last_name' => "Dugarov",
+            'phone_number' => '+79295556620',
+            'email' => 'duga@mail.ru'
+        ]);
+
+        $response->assertJsonPath('updated_guest.name', 'Boris');
+
+        $this->assertDatabaseCount('guests', 10);
+
+        $this->assertDatabaseHas('guests', [
+            'first_name' => 'Boris'
+        ]);
+    }
+
 
 }
