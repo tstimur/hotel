@@ -7,17 +7,32 @@ use App\Http\Requests\StoreGuestRequest;
 use App\Http\Requests\UpdateGuestRequest;
 use App\Http\Resources\V1\GuestResource;
 use App\Models\Guest;
+use libphonenumber\NumberParseException;
+use libphonenumber\PhoneNumberUtil;
 
 class GuestController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource with paginate.
      */
     public function index(): \Illuminate\Http\JsonResponse
     {
+        $guests = Guest::paginate(5);
+
         return response()->json([
             'status' => 'success',
-            'data' => GuestResource::collection(Guest::all())
+            'data' => GuestResource::collection($guests),
+            'links' => [
+                'previous page' => $guests->previousPageUrl(),
+                'next page' => $guests->nextPageUrl()
+            ],
+            'meta' => [
+                'current_page' => $guests->currentPage(),
+                'per_page' => $guests->perPage(),
+                'total' => $guests->total(),
+                'from' => $guests->firstItem(),
+                'to' => $guests->lastItem(),
+            ]
         ]);
     }
 
@@ -26,9 +41,21 @@ class GuestController extends Controller
      */
     public function store(StoreGuestRequest $request): \Illuminate\Http\JsonResponse
     {
+        $country = $request->input('country') ?? '';
+        if ($country === '') {
+            $country = $this->getCountryCode($request->input('phone_number'));
+        }
+
+        $guest = Guest::create(
+            array_merge(
+                $request->all(),
+                ['country' => $country]
+            )
+        );
+
         return response()->json([
             'status' => 'success',
-            'created guest' => new GuestResource(Guest::create($request->all()))
+            'created guest' => new GuestResource($guest)
         ]);
     }
 
@@ -65,5 +92,25 @@ class GuestController extends Controller
             'status' => 'success',
             'message' => 'guest removed'
         ]);
+    }
+
+    /**
+     * This method returns code of country.
+     *
+     * @param $phoneNumber
+     * @return string|null
+     */
+    private function getCountryCode($phoneNumber): ?string
+    {
+        try {
+            $phoneUtil = PhoneNumberUtil::getInstance();
+            $parsedNumber = $phoneUtil->parse($phoneNumber, 'None');
+            return $phoneUtil->getRegionCodeForNumber($parsedNumber);
+        } catch (NumberParseException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid phone number'
+            ], 422);
+        }
     }
 }
