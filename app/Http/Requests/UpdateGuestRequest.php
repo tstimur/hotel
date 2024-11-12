@@ -22,11 +22,19 @@ class UpdateGuestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name.required' => 'Имя обязательно для заполнения',
+            'first_name' => ['string', 'alpha', 'max:255'],
+            'last_name' => ['string', 'alpha', 'max:255'],
+            'phone_number' => ['phone:e164PhoneNumber', 'regex:/^\+?[0-9]{7,15}$/', 'unique:guests,phone_number'],
+            'email' => ['email','max:255', 'unique:guests,email'],
+            'country' => ['nullable', 'string', 'max:255']
+        ];
+    }
+
+    public function messages()
+    {
+        return [
             'first_name.alpha' => 'Имя должно содержать только буквы',
-            'last_name.required' => 'Фамилия обязательна для заполнения',
             'last_name.alpha' => 'Фамилия должна содержать только буквы',
-            'phone_number.required' => 'Телефон обязателен',
             'phone_number.unique' => 'Этот телефон уже используется',
             'phone_number.phone' => 'Телефон должен быть в правильном формате',
             'email.unique' => 'Этот email уже используется',
