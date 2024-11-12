@@ -33,5 +33,24 @@ class GuestTest extends TestCase
         $response->assertJsonPath('selected_guest.first_name', $guest->name);
     }
 
+    public function testGuestsStore()
+    {
+        $response = $this->post('/api/v1/guests/', [
+            'id' => 22,
+            'first_name' => "Boris",
+            'last_name' => "Dugarov",
+            'phone_number' => '+79295556620',
+            'email' => 'duga@mail.ru'
+        ]);
+
+        $response->assertJsonPath('created_guest.name', 'Boris');
+
+        $this->assertDatabaseCount('guests', 11);
+
+        $this->assertDatabaseHas('guests', [
+            'first_name' => 'Boris'
+        ]);
+    }
+
 
 }
