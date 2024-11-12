@@ -30,7 +30,7 @@ class GuestController extends Controller
     {
         return response()->json([
             'status' => 'success',
-            'created guest' => Guest::create($request->all())
+            'created guest' => new GuestResource(Guest::create($request->all()))
         ]);
     }
 
@@ -41,7 +41,7 @@ class GuestController extends Controller
     {
         return response()->json([
             'status' => 'success',
-            'selected data' => $guest,
+            'selected data' => new GuestResource($guest),
         ]);
     }
 
@@ -53,7 +53,7 @@ class GuestController extends Controller
         $guest->update($request->all());
         return response()->json([
             'status' => 'success',
-            'updated data' => $guest,
+            'updated data' => new GuestResource($guest),
         ]);
     }
 
