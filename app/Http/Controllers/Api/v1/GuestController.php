@@ -7,7 +7,6 @@ use App\Http\Requests\StoreGuestRequest;
 use App\Http\Requests\UpdateGuestRequest;
 use App\Http\Resources\V1\GuestResource;
 use App\Models\Guest;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class GuestController extends Controller
 {
@@ -16,7 +15,6 @@ class GuestController extends Controller
      */
     public function index()
     {
-//        $guests = Guest::all();
         return response()->json([
             'status' => 'success',
             'data' => GuestResource::collection(Guest::all())
