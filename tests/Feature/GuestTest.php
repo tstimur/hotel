@@ -70,5 +70,24 @@ class GuestTest extends TestCase
         ]);
     }
 
+    public function testGuestsDestroy()
+    {
+        $guest = Guest::factory()->create([
+            'first_name' => "Sayan",
+            'last_name' => "Shtolts",
+            'phone_number' => '+79295558899',
+            'email' => 'juice@mail.ru',
+            'country' => 'Russia'
+        ]);
 
+        $this->assertDatabaseHas('guests', [
+            'id' => $guest->id
+        ]);
+
+        $this->delete("/api/v1/guests/{$guest->id}");
+
+        $this->assertDatabaseMissing('guests', [
+            'id' => $guest->id
+        ]);
+    }
 }
