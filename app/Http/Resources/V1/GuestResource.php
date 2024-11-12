@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\V1;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -21,8 +22,8 @@ class GuestResource extends JsonResource
             'phone' => $this->phone_number,
             'email' => $this->email,
             'country' => $this->country,
-            'created' => $this->created_at,
-            'updated' => $this->updated_at
+            'created' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
+            'updated' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
         ];
     }
 }
