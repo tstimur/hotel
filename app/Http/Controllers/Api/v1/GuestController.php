@@ -13,7 +13,7 @@ class GuestController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
         return response()->json([
             'status' => 'success',
@@ -24,7 +24,7 @@ class GuestController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreGuestRequest $request)
+    public function store(StoreGuestRequest $request): \Illuminate\Http\JsonResponse
     {
         return response()->json([
             'status' => 'success',
@@ -35,7 +35,7 @@ class GuestController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Guest $guest)
+    public function show(Guest $guest): \Illuminate\Http\JsonResponse
     {
         return response()->json([
             'status' => 'success',
@@ -46,7 +46,7 @@ class GuestController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateGuestRequest $request, Guest $guest)
+    public function update(UpdateGuestRequest $request, Guest $guest): \Illuminate\Http\JsonResponse
     {
         $guest->update($request->all());
         return response()->json([
@@ -58,7 +58,7 @@ class GuestController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Guest $guest)
+    public function destroy(Guest $guest): \Illuminate\Http\JsonResponse
     {
         $guest->delete();
         return response()->json([
