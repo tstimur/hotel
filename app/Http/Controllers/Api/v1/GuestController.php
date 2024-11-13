@@ -98,19 +98,19 @@ class GuestController extends Controller
      * This method returns code of country.
      *
      * @param $phoneNumber
-     * @return string|null
+     * @return array|string|null
      */
-    private function getCountryCode($phoneNumber): ?string
+    private function getCountryCode($phoneNumber): array|string|null
     {
         try {
             $phoneUtil = PhoneNumberUtil::getInstance();
             $parsedNumber = $phoneUtil->parse($phoneNumber, 'None');
             return $phoneUtil->getRegionCodeForNumber($parsedNumber);
         } catch (NumberParseException $e) {
-            return response()->json([
+            return [
                 'status' => false,
                 'message' => 'Invalid phone number'
-            ], 422);
+            ];
         }
     }
 }
