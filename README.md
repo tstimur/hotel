@@ -1,5 +1,4 @@
-
-# PHP-PostgreSQL-Nginx-Laravel11-Docker
+# Microservice for working with guests
 
 This project is a microservice developed using PHP, Laravel 11, and Docker for managing guests in a hotel system. The application exposes a RESTful API for performing CRUD operations on guest records. The service uses PostgreSQL as the database to store guest data and Nginx as the web server for routing HTTP requests.
 
