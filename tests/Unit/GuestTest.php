@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Http\Controllers\Api\v1\GuestController;
+use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberUtil;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
@@ -14,12 +15,12 @@ class GuestTest extends TestCase
      */
     public function testGetCountryCodeFromValidPhone(): void
     {
-        $mockPhoneUntil = $this->createMock(PhoneNumberUtil::class);
+        $mockPhoneUtil = $this->createMock(PhoneNumberUtil::class);
 
-        $mockPhoneUntil->method('parse')
+        $mockPhoneUtil->method('parse')
             ->willReturnSelf();
 
-        $mockPhoneUntil->method('getRegionCodeForNumber')
+        $mockPhoneUtil->method('getRegionCodeForNumber')
             ->willReturn('RU');
 
         $controller = new GuestController();
@@ -29,5 +30,30 @@ class GuestTest extends TestCase
         $countryCode = $reflectionMethod->invoke($controller, '+79295558899');
 
         $this->assertEquals('RU', $countryCode);
+    }
+
+    public function testGetCountryCodeWithInvalidPhoneNumber()
+    {
+        $phoneNumber = 'invalid-phone';
+
+        $mockPhoneUtil = $this->createMock(PhoneNumberUtil::class);
+        $mockPhoneUtil->method('parse')
+            ->willThrowException(new NumberParseException(
+                NumberParseException::NOT_A_NUMBER,
+                'Invalid phone number format'
+            ));
+
+        $controller = new GuestController();
+        $reflectionMethod = new ReflectionMethod(GuestController::class, 'getCountryCode');
+        $reflectionMethod->setAccessible(true);
+
+        $response = $reflectionMethod->invoke($controller, $phoneNumber);
+
+        $this->assertEquals([
+            'status' => false,
+            'message' => 'Invalid phone number'
+        ],
+            $response
+        );
     }
 }
