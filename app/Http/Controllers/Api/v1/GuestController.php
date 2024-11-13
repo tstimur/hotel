@@ -7,6 +7,7 @@ use App\Http\Requests\StoreGuestRequest;
 use App\Http\Requests\UpdateGuestRequest;
 use App\Http\Resources\V1\GuestResource;
 use App\Models\Guest;
+use Illuminate\Http\JsonResponse;
 use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberUtil;
 
@@ -15,7 +16,7 @@ class GuestController extends Controller
     /**
      * Display a listing of the resource with paginate.
      */
-    public function index(): \Illuminate\Http\JsonResponse
+    public function index(): JsonResponse
     {
         $guests = Guest::paginate(5);
 
@@ -39,7 +40,7 @@ class GuestController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreGuestRequest $request): \Illuminate\Http\JsonResponse
+    public function store(StoreGuestRequest $request): JsonResponse
     {
         $country = $request->input('country') ?? '';
         if ($country === '') {
@@ -56,41 +57,6 @@ class GuestController extends Controller
         return response()->json([
             'status' => 'success',
             'created_guest' => new GuestResource($guest)
-        ]);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Guest $guest): \Illuminate\Http\JsonResponse
-    {
-        return response()->json([
-            'status' => 'success',
-            'selected_guest' => new GuestResource($guest),
-        ]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateGuestRequest $request, Guest $guest): \Illuminate\Http\JsonResponse
-    {
-        $guest->update($request->all());
-        return response()->json([
-            'status' => 'success',
-            'updated_guest' => new GuestResource($guest),
-        ]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Guest $guest): \Illuminate\Http\JsonResponse
-    {
-        $guest->delete();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'guest removed'
         ]);
     }
 
@@ -112,5 +78,40 @@ class GuestController extends Controller
                 'message' => 'Invalid phone number'
             ];
         }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Guest $guest): JsonResponse
+    {
+        return response()->json([
+            'status' => 'success',
+            'selected_guest' => new GuestResource($guest),
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateGuestRequest $request, Guest $guest): JsonResponse
+    {
+        $guest->update($request->all());
+        return response()->json([
+            'status' => 'success',
+            'updated_guest' => new GuestResource($guest),
+        ]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Guest $guest): JsonResponse
+    {
+        $guest->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'guest removed'
+        ]);
     }
 }
