@@ -5,13 +5,19 @@ namespace Tests\Unit;
 use App\Http\Controllers\Api\v1\GuestController;
 use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberUtil;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
 use ReflectionMethod;
 
 class GuestTest extends TestCase
 {
     /**
-     * A basic unit test example.
+     * Test getCountryCode method with valid phone number.
+     *
+     * @return void
+     * @throws Exception
+     * @throws ReflectionException
      */
     public function testGetCountryCodeFromValidPhone(): void
     {
@@ -32,7 +38,14 @@ class GuestTest extends TestCase
         $this->assertEquals('RU', $countryCode);
     }
 
-    public function testGetCountryCodeWithInvalidPhoneNumber()
+    /**
+     * Test getCountryCode method with invalid phone number.
+     *
+     * @return void
+     * @throws Exception
+     * @throws ReflectionException
+     */
+    public function testGetCountryCodeWithInvalidPhoneNumber(): void
     {
         $phoneNumber = 'invalid-phone';
 
